@@ -1,0 +1,23 @@
+.icon {
+    margin-left: 15px;
+    animation: rotate 5s infinite linear;
+}
+
+input[type='color'] {
+    margin: 0 10px;
+    border: none;
+    outline: none;
+    background: rgba(175, 159, 159, 0);
+    width: 96%;
+    height: 100px;
+    cursor: pointer;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
