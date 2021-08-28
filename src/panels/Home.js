@@ -38,6 +38,8 @@ const Home = ({ id }) => {
 	});
 	const [ tooltip, setTooltip ] = useState('');
 
+	const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 	const copyColor = from => {
 		switch (from) {
 			case 'hex':
@@ -130,12 +132,12 @@ const Home = ({ id }) => {
 				<SketchPicker
 				color={colors.hex}
 				onChangeComplete={e => convertColor(e)}
-				width='50%'
+				width={isPhone ? '80%' : '50%'}
 				/>
 			</center>
 			<center>
 				<h3
-				style={{ color: '#fff', marginTop: -5 }}
+				style={{ color: '#fff' }}
 				>
 					{tooltip 
 					? <div style={{ color: colors.hex }}>{tooltip}</div> 
