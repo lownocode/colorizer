@@ -3,15 +3,6 @@
     animation: rotate 5s infinite linear;
 }
 
-input[type='color'] {
-    border: none;
-    outline: none;
-    background: rgba(175, 159, 159, 0);
-    width: 99%;
-    height: 100px;
-    cursor: pointer;
-}
-
 @keyframes rotate {
     from {
         transform: rotate(0deg);
