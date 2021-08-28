@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import bridge from '@vkontakte/vk-bridge';
+import { SketchPicker } from 'react-color';
 
 import { 
 	Panel, 
@@ -30,10 +31,12 @@ const texts = [
 
 const Home = ({ id }) => {
 	const [ colors, setColors ] = useState({
-		hex: '#08AF08',
-		rgb: 'rgb(8, 175, 8)'
+		hex: '#9013FE',
+		hexa: '#9013FE1',
+		rgb: 'rgb(144, 19, 254)',
+		rgba: 'rgba(144, 19, 254, 1)'
 	});
-	const [ tooltip, setTooltip ] = useState('tes');
+	const [ tooltip, setTooltip ] = useState('');
 
 	const copyColor = from => {
 		switch (from) {
@@ -45,6 +48,14 @@ const Home = ({ id }) => {
 				bridge.send('VKWebAppCopyText', { text: colors.rgb });
 				setTooltip('RGB скопирован!');
 				return setTimeout(() => { setTooltip('') }, 4500);
+			case 'hexa':
+				bridge.send('VKWebAppCopyText', { text: colors.hexa });
+				setTooltip('HEXA скопирован!');
+				return setTimeout(() => { setTooltip('') }, 4500);
+			case 'rgba':
+				bridge.send('VKWebAppCopyText', { text: colors.rgba });
+				setTooltip('RGBA скопирован!');
+				return setTimeout(() => { setTooltip('') }, 4500);
 			default:
 				return;
 		}
@@ -54,7 +65,7 @@ const Home = ({ id }) => {
 		len = len || 2;
 		var zeros = new Array(len).join('0');
 		return (zeros + str).slice(-len);
-	}
+	};
 
 	const invertColor = (hex, bw) => {
 		if (hex.indexOf('#') === 0) {
@@ -79,21 +90,31 @@ const Home = ({ id }) => {
 		g = (255 - g).toString(16);
 		b = (255 - b).toString(16);
 		return "#" + padZero(r) + padZero(g) + padZero(b);
+	};
+
+	const rgbaToHexa = rgba => {
+		var a,
+		rgb = rgba.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
+		alpha = (rgb && rgb[4] || "").trim(),
+		hex = rgb ?
+		(rgb[1] | 1 << 8).toString(16).slice(1) +
+		(rgb[2] | 1 << 8).toString(16).slice(1) +
+		(rgb[3] | 1 << 8).toString(16).slice(1) : rgba;
+	  
+		if (alpha !== "") { a = alpha; }
+		else { a = '01'; }
+		hex = hex + a;
+	  
+		return `#` + hex;
 	}
 
 	const convertColor = color => {
-		if(color.substring(0,1) == '#') {
-		   color = color.substring(1);
-		 }
-
-		let colors = {};
-
-		colors = {
-			hex: `#` + (color).toString().toUpperCase(),
-			rgb: `rgb(` + parseInt(color.substring(0,2),16) + `, ` + parseInt(color.substring(2,4),16) + `, ` + parseInt(color.substring(4),16) +`)`,
-		};
-	  
-		setColors(colors);
+		setColors({
+			hex: (color.hex).toString().toUpperCase(),
+			hexa: rgbaToHexa(`rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`).toString().toUpperCase(),
+			rgb: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`,
+			rgba: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+		});
 	};
 
 	return (
@@ -105,12 +126,13 @@ const Home = ({ id }) => {
 				Colorizer
 			</PanelHeader>
 			<br/>
-			<input
-			id='picker'
-			type='color'
-			onChange={e => convertColor(e.target.value)}
-			value={colors.hex}
-			/>
+			<center>
+				<SketchPicker
+				color={colors.hex}
+				onChangeComplete={e => convertColor(e)}
+				width='50%'
+				/>
+			</center>
 			<center>
 				<h3
 				style={{ color: '#fff', marginTop: -5 }}
@@ -146,6 +168,32 @@ const Home = ({ id }) => {
 					</PanelHeaderButton>}
 					>
 						<b style={{ color: colors.hex }}>{colors.rgb}</b>
+					</SimpleCell>
+				</Card>
+
+				<Card style={{ background: invertColor(colors.hex, true), borderRadius: 10 }}>
+					<SimpleCell
+					description={<div style={{ color: colors.hex }}>HEXA</div>}
+					disabled
+					style={{ background: invertColor(colors.hex, true), borderRadius: 10 }}
+					after={<PanelHeaderButton onClick={() => copyColor('hexa')}>
+						<Icon24Copy fill={colors.hex}/>
+					</PanelHeaderButton>}
+					>
+						<b style={{ color: colors.hex }}>{colors.hexa}</b>
+					</SimpleCell>
+				</Card>
+
+				<Card style={{ background: invertColor(colors.hex, true), borderRadius: 10 }}>
+					<SimpleCell
+					description={<div style={{ color: colors.hex }}>RGBA</div>}
+					disabled
+					style={{ background: invertColor(colors.hex, true), borderRadius: 10 }}
+					after={<PanelHeaderButton onClick={() => copyColor('rgba')}>
+						<Icon24Copy fill={colors.hex}/>
+					</PanelHeaderButton>}
+					>
+						<b style={{ color: colors.hex }}>{colors.rgba}</b>
 					</SimpleCell>
 				</Card>
 			</CardGrid>

@@ -4,11 +4,10 @@
 }
 
 input[type='color'] {
-    margin: 0 10px;
     border: none;
     outline: none;
     background: rgba(175, 159, 159, 0);
-    width: 96%;
+    width: 99%;
     height: 100px;
     cursor: pointer;
 }
