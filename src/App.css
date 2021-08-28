@@ -1,6 +1,6 @@
 :root {
-    --background_content: rgb(13, 7, 27);
-    --header_background: rgb(18, 5, 46);
+    --background_content: #1A0B31;
+    --header_background: #1A0B31;
     --header_text: rgb(224, 221, 221);
     --header_tint: #ffffff;
 }
