@@ -93,7 +93,7 @@ const Home = ({ id }) => {
 
 	const convertColor = color => {
 		document.documentElement.style.setProperty('--background_content', color.hex);
-		document.documentElement.style.setProperty('--header_background', color.hex);
+		document.documentElement.style.setProperty('--header_background', `linear-gradient(100deg, ${color.hex}, ${invertColor(color.hex)})`);
 		document.documentElement.style.setProperty('--header_text', invertColor(color.hex, true));
 		document.documentElement.style.setProperty('--header_tint', invertColor(color.hex, true));
 
@@ -139,7 +139,7 @@ const Home = ({ id }) => {
 				style={{ color: '#fff' }}
 				>
 					{tooltip 
-					? <div style={{ color: colors.hex }}>{tooltip}</div> 
+					? <div style={{ color: invertColor(colors.hex, false) }}>{tooltip}</div> 
 					: <div style={{ color: invertColor(colors.hex, true) }}>Выберите цвет</div>}
 				</h3>
 			</center>
